@@ -1,0 +1,17 @@
+角色
+	管理人员 : administrator
+	设备科人员 : equ_dep_person
+	院长 : president
+	科室主任 : director
+	操作人员 : operator
+
+权限
+	导出设备数据 : export_equ_data
+	导出用户数据 : export_user_data
+	查看设备信息 : equ_read
+	修改设备信息 : equ_modify
+	删除设备信息 : equ_delete
+	查看用户信息 : user_read
+	修改用户信息 : user_modify
+	删除用户信息 : user_delete
+	系统设置 : system_settings

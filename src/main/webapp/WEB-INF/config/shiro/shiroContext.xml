@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+ http://www.springframework.org/schema/util
+ http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="successUrl" value="/homepage" />
+		<property name="unauthorizedUrl" value="/static/unauthorized.html" />
+		<property name="filterChainDefinitions">
+			<value>
+				/login = authc
+				/homepage = authc
+				/logout = logout
+				/static/user/** = authc
+				/resources/js/private/** = authc
+				/users/user/modify-property/** = authc, perms[user_modify]
+				/users/user/modify-account/** = authc
+				/users/user/modify-properties/** = authc, perms[user_modify]
+				/users/user/modify-page/** = authc, perms[user_modify]
+				/users/user/add/** = authc, perms[user_add]
+				/users/user/add-page = authc, perms[user_add]
+				/users/user/delete/** = authc, perms[user_delete]
+				/users/get/** = authc, perms[user_read]
+				/users/search/** =authc, perms[user_search]
+				/users/user/account-settings/** = authc
+				/users/user/add-page/** = authc, perms[user_add]
+				/equipments/equipment/modify-properties/** = authc, perms[equ_modify]
+				/equipments/equipment/modify-page/** = authc, perms[equ_modify]
+				/equipments/equipment/add/** = authc, perms[equ_add]
+				/equipments/equipment/delete/** = authc, perms[equ_delete]
+				/equipments/get/** = authc, perms[equ_read]
+				/equipments/equipment/display/** = authc, perms[equ_read]
+				/equipments/search/** =authc, perms[equ_search]
+				/system-settings/** = authc, roles[administrator]
+				/export/** = authc
+			</value>
+		</property>
+		<property name="filters">
+			<util:map>
+				<entry key="logout" value-ref="logoutFilter" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+	</bean>
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<bean id="myRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+		<property name="dataSource" ref="dataSource" />
+		<property name="authenticationQuery"
+			value="select password from user where user_name = ?" />
+		<property name="userRolesQuery"
+			value="select r.role_name from user u join user_role_relation ur join role r on u.id = ur.user_id and r.id = ur.role_id and u.user_name = ?" />
+		<property name="permissionsQuery"
+			value="select p.permission_name from role r join role_permission_relation rp join permission p on r.id = rp.role_id and p.id = rp.permission_id and r.role_name = ?" />
+		<property name="permissionsLookupEnabled" value="true" />
+	</bean>
+
+	<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+		<property name="redirectUrl" value="/static/logout.html" />
+	</bean>
+
+</beans>

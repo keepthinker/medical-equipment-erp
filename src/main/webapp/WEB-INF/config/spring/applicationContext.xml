@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:component-scan base-package="com.keepthinker.meerp" />
+	<aop:aspectj-autoproxy />
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<mvc:annotation-driven />
+
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/static/**" location="/static/" />
+
+	<mvc:view-controller path="/equipments/equipment/add-page"
+		view-name="equipment/add-equipment" />
+		
+	<mvc:view-controller path="/login" view-name="login" />
+
+	<bean id="config" class="com.keepthinker.meerp.config.SystemConfig">
+		<constructor-arg name="pageSize" type="int" value="${pageSize}" />
+		<constructor-arg name="searchResultSize" type="int" value="${searchResultSize}" />
+		<constructor-arg name="fileCleanInterval" type="int"
+			value="${fileCleanInterval}" /><!-- 1800000 miliseconds = 0.5 hours -->
+		<constructor-arg name="durationOfExpiredTime" type="int"
+			value="${durationOfExpiredTime}" /><!-- 7200000 miliseconds = 2 hours -->
+		<constructor-arg name="hasTrash" type="boolean" value="${hasTrash}" />
+	</bean>
+	<import resource="../properties.xml"/>
+	
+</beans>
